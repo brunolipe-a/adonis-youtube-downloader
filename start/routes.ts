@@ -20,6 +20,12 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+Route.get('/', () => ({ message: 'ok' }))
+
+Route.get('folders/:folder/download', 'DownloadFolderController.handle').as('folders.download')
+
+Route.resource('folders', 'FoldersController').apiOnly()
+Route.resource('folders.musics', 'MusicController').only(['index', 'store', 'destroy'])
+Route.resource('folders.playlists', 'PlaylistsController').only(['store'])
+
+Route.resource('downloads', 'DownloadsController').only(['index'])
