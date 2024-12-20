@@ -8,24 +8,7 @@ Execute o comando abaixo para instalar todas as dependências do projeto:
 
 ```bash
 yarn
-```
-
-### 2. Criar o Banco de Dados
-
-Crie um arquivo SQLite vazio para o banco de dados:
-
-```bash
-mkdir tmp
-touch ./tmp/db.sqlite3
-```
-
-### 3. Executar as Migrações
-
-Rode as migrações para criar as tabelas necessárias:
-
-```bash
 cp .env.example .env
-node ace migration:run
 ```
 
 ### 4. Instalar o FFmpeg
