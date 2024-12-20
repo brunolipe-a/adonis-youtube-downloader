@@ -15,7 +15,8 @@ yarn
 Crie um arquivo SQLite vazio para o banco de dados:
 
 ```bash
-touch tmp/db.sqlite3
+mkdir tmp
+touch ./tmp/db.sqlite3
 ```
 
 ### 3. Executar as Migrações
@@ -23,6 +24,7 @@ touch tmp/db.sqlite3
 Rode as migrações para criar as tabelas necessárias:
 
 ```bash
+cp .env.example .env
 node ace migration:run
 ```
 
