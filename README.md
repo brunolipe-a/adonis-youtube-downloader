@@ -8,14 +8,21 @@ Execute o comando abaixo para instalar todas as dependências do projeto:
 
 ```bash
 yarn
+```
+
+### 2. Configurar o Arquivo de Ambiente
+
+Copie o arquivo de exemplo `.env.example` para `.env`:
+
+```bash
 cp .env.example .env
 ```
 
-### 4. Instalar o FFmpeg
+### 3. Instalar o FFmpeg
 
 A aplicação requer o FFmpeg para funcionar corretamente. A instalação varia de acordo com o sistema operacional:
 
-- **Windows**: Procure "instalar FFmpeg no Windows" na internet para seguir o guia adequado.
+- **Windows**: Procure por "instalar FFmpeg no Windows" na internet para seguir o guia adequado.
 - **MacOS**: Pode ser instalado via Homebrew. Execute:
 
   ```bash
@@ -28,7 +35,7 @@ A aplicação requer o FFmpeg para funcionar corretamente. A instalação varia 
   sudo apt install ffmpeg
   ```
 
-### 5. Iniciar o Servidor
+### 4. Iniciar o Servidor
 
 Execute o comando abaixo para iniciar o servidor de desenvolvimento:
 
@@ -36,7 +43,7 @@ Execute o comando abaixo para iniciar o servidor de desenvolvimento:
 yarn dev
 ```
 
-### 6. Acessar a Aplicação
+### 5. Acessar a Aplicação
 
 Abra o navegador e acesse:
 
