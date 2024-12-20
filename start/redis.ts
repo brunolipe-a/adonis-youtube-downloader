@@ -1,3 +1,3 @@
-import Redis from '@ioc:Adonis/Addons/Redis'
+// import Redis from '@ioc:Adonis/Addons/Redis'
 
-Redis.subscribe('', '')
+// Redis.subscribe('', '')

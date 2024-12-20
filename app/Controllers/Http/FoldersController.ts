@@ -10,9 +10,9 @@ export default class FoldersController {
   public async store({ request, response }: HttpContextContract) {
     const { name } = request.all()
 
-    const folder = await Folder.create({ name })
+    await Folder.create({ name })
 
-    return response.created(folder)
+    return response.redirect().back()
   }
 
   @bind()
@@ -37,6 +37,6 @@ export default class FoldersController {
   public async destroy({ response }: HttpContextContract, folder: Folder) {
     await folder.delete()
 
-    return response.noContent()
+    return response.redirect().back()
   }
 }

@@ -32,7 +32,8 @@
       "@adonisjs/lucid",
       "@adonisjs/route-model-binding/build/adonis-typings",
       "@adonisjs/redis",
-      "@setten/bull-queue"
+      "@setten/bull-queue",
+      "@adonisjs/view"
     ]
   }
 }

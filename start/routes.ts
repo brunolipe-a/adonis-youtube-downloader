@@ -19,13 +19,24 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import Folder from 'App/Models/Folder'
 
-Route.get('/', () => ({ message: 'ok' }))
+Route.get('/', async ({ view }) => {
+  const folders = await Folder.query().preload('musics')
+  // const downloads = await Download.query().orderBy('createdAt', 'desc')
 
-Route.get('folders/:folder/download', 'DownloadFolderController.handle').as('folders.download')
+  return view.render('home', { folders })
+})
+
+Route.get('/download', ({ view, request }) => {
+  return view.render('download', { isOk: request.input('ok') })
+})
+
+Route.post('folders/:folder/download', 'DownloadFolderController.handle').as('folders.download')
 
 Route.resource('folders', 'FoldersController').apiOnly()
 Route.resource('folders.musics', 'MusicController').only(['index', 'store', 'destroy'])
 Route.resource('folders.playlists', 'PlaylistsController').only(['store'])
+Route.post('playlist/download', 'PlaylistsController.download')
 
 Route.resource('downloads', 'DownloadsController').only(['index'])

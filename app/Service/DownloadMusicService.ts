@@ -1,8 +1,17 @@
-import YouTubeDownload from 'ytdl-core'
+import YouTubeDownload from '@distube/ytdl-core'
+import fs from 'node:fs'
 
-import Music from 'App/Models/Music'
 import { inject } from '@adonisjs/core/build/standalone'
+import Music from 'App/Models/Music'
+import { Readable } from 'node:stream'
 import { GenerateMp3Service } from './GenerateMp3Service'
+
+const streamToFile = (inputStream: Readable, filePath: string) => {
+  return new Promise((resolve, reject) => {
+    const fileWriteStream = fs.createWriteStream(filePath)
+    inputStream.pipe(fileWriteStream).on('finish', resolve).on('error', reject)
+  })
+}
 
 @inject()
 export class DownloadMusicService {

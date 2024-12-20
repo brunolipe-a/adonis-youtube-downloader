@@ -1,13 +1,14 @@
-import type { JobHandlerContract, Job } from '@ioc:Setten/Queue'
 import Application from '@ioc:Adonis/Core/Application'
 import Drive from '@ioc:Adonis/Core/Drive'
 
 import Download from 'App/Models/Download'
 import Folder from 'App/Models/Folder'
 
-import { zip } from 'zip-a-folder'
-import { DownloadMusicService } from 'App/Service/DownloadMusicService'
 import { inject } from '@adonisjs/core/build/standalone'
+import { DownloadMusicService } from 'App/Service/DownloadMusicService'
+import { zip } from 'zip-a-folder'
+
+type ProcessFunction<T> = (item: T) => Promise<any>
 
 export type ProcessFolderDownloadPayload = {
   downloadId: string
@@ -15,10 +16,8 @@ export type ProcessFolderDownloadPayload = {
 }
 
 @inject()
-export default class implements JobHandlerContract {
-  constructor(public job: Job, protected downloadMusicService: DownloadMusicService) {
-    this.job = job
-  }
+export default class {
+  constructor(protected downloadMusicService: DownloadMusicService) {}
 
   public async handle({ downloadId, folderId }: ProcessFolderDownloadPayload) {
     const download = await Download.find(downloadId)
@@ -30,19 +29,19 @@ export default class implements JobHandlerContract {
 
     await folder.load('musics')
 
-    await this.createFolder(download.id)
+    await this.createFolder(folder.name)
 
-    const folderPath = Application.tmpPath(`uploads/${download.id}`)
+    const folderPath = Application.tmpPath(`uploads/${folder.name}`)
 
-    await Promise.all(
-      folder.musics.map((music) => this.downloadMusicService.handle(music, folderPath))
+    await this.processInBatches(folder.musics, 25, (music) =>
+      this.downloadMusicService.handle(music, folderPath)
     )
 
-    const zipUrl = await this.generateZipFromFolder(folderPath, download.id)
+    // const zipUrl = await this.generateZipFromFolder(folderPath, download.id)
 
-    await this.deleteFolder(download.id)
+    // await this.deleteFolder(download.id)
 
-    await download.merge({ url: zipUrl, isFinished: true }).save()
+    // await download.merge({ url: zipUrl, isFinished: true }).save()
   }
 
   protected async generateZipFromFolder(folderPath: string, zipFilename: string) {
@@ -61,5 +60,16 @@ export default class implements JobHandlerContract {
     return Drive.put(`${folderName}/.info`, '')
   }
 
-  public async failed() {}
+  protected async processInBatches<T>(
+    items: T[],
+    batchSize: number,
+    processFunction: ProcessFunction<T>
+  ) {
+    // Itera sobre os itens em lotes
+    for (let i = 0; i < items.length; i += batchSize) {
+      const batch = items.slice(i, i + batchSize)
+
+      await Promise.all(batch.map(processFunction))
+    }
+  }
 }
